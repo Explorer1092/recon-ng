@@ -70,7 +70,7 @@ class Recon(framework.Framework):
     def version_check(self):
         try:
             pattern = "'(\d+\.\d+\.\d+[^']*)'"
-            remote = re.search(pattern, self.request('https://bitbucket.org/LaNMaSteR53/recon-ng/raw/master/VERSION').raw).group(1)
+            remote = re.search(pattern, self.request('https://raw.githubusercontent.com/lanmaster53/recon-ng/master/VERSION').raw).group(1)
             local = re.search(pattern, open('VERSION').read()).group(1)
             if remote != local:
                 self.alert('Your version of Recon-ng does not match the latest release.')
@@ -322,7 +322,6 @@ class Recon(framework.Framework):
         banner_len = len(max(banner.split('\n'), key=len))
         print(banner)
         print('{0:^{1}}'.format('%s[%s v%s, %s]%s' % (framework.Colors.O, self._name, __version__, __author__, framework.Colors.N), banner_len+8)) # +8 compensates for the color bytes
-        print('')
         counts = [(self.loaded_category[x], x) for x in self.loaded_category]
         count_len = len(max([str(x[0]) for x in counts], key=len))
         for count in sorted(counts, reverse=True):
@@ -330,6 +329,8 @@ class Recon(framework.Framework):
             print('%s%s %s modules%s' % (framework.Colors.B, cnt.ljust(count_len+2), count[1].title(), framework.Colors.N))
             # create dynamic easter egg command based on counts
             setattr(self, 'do_%d' % count[0], self._menu_egg)
+        print('')
+        self.error('WARNING! You are using an old version of Recon-ng that is no longer maintained. Recon-ng has moved to a new respository, and this version must be manually migrated. At some point in the near future, this repository will be deleted. Please ignore the migration notes link below and visit https://github.com/lanmaster53/recon-ng/wiki/Getting-Started#v4-to-v5 for further guidance. Thank you.')
         print('')
 
     def show_workspaces(self):
